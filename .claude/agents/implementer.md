@@ -1,5 +1,6 @@
 ---
 name: implementer
+model: claude-opus-4-6
 description: Execute focused implementation tasks with full tool access
 tools: Read, Grep, Glob, Bash, Edit, Write
 ---

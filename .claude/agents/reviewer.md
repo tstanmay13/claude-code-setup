@@ -1,5 +1,6 @@
 ---
 name: reviewer
+model: claude-opus-4-6
 description: Independently verify code changes, run tests, and validate that features actually work
 tools: Read, Grep, Glob, Bash
 ---

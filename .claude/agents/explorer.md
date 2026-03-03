@@ -1,5 +1,6 @@
 ---
 name: explorer
+model: claude-opus-4-6
 description: Investigate codebases, architecture, and existing patterns before implementation
 tools: Read, Grep, Glob, Bash
 ---
