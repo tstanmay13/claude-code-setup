@@ -37,7 +37,9 @@
       "Bash(curl https://*)",
       "Bash(gh pr *)",
       "Bash(gh issue *)",
-      "Bash(gh api *)"
+      "Bash(gh api *)",
+      "mcp__claude_ai_Linear__*",
+      "mcp__linear__*"
     ],
     "deny": [
       "Bash(rm -rf /)",
