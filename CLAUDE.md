@@ -12,7 +12,7 @@
 - Before compacting or when context is getting long, write current state to `tasks/context-state.md`
 - The state file should capture: current objective, what's been done so far, what's left to do, key decisions made, important file paths and line numbers, and any blockers
 - After compacting, immediately read `tasks/context-state.md` to restore awareness
-- Proactively compact when context feels heavy — don't wait until you're forced to
+- **Hard rule: compact at 50% context usage, don't wait longer**
 - Prefer delegating investigation to subagents over reading files directly in the orchestrator
 - When a subagent returns results, summarize the key findings in 2-3 sentences rather than pasting full output
 
@@ -32,7 +32,8 @@
 - Never mark a task complete without proving it works
 - Diff behavior between main and your changes when relevant
 - Ask yourself: "Would a staff engineer approve this?"
-- Run tests, check logs, demonstrate correctness
+- Demand EVIDENCE not confirmation — show test output, show the diff, show the API response
+- If you can't demonstrate it works, it's not done
 
 ### 6. Demand Elegance (Balanced)
 - For non-trivial changes: pause and ask "is there a more elegant way?"
@@ -45,6 +46,13 @@
 - Point at logs, errors, failing tests — then resolve them
 - Zero context switching required from the user
 - Go fix failing CI tests without being told how
+
+### 8. Failure Handling & Rollback
+- Commit after each meaningful step so there's always a clean rollback point
+- If a subagent fails the same approach twice, STOP — escalate to the user, don't retry blindly
+- If the task turns out to be fundamentally different than planned, re-enter plan mode instead of patching
+- When something breaks: `git stash` or `git revert` to last known good state, then re-plan
+- Never leave the repo in a broken state — if you can't fix it, revert
 
 ## Task Management
 
@@ -63,6 +71,14 @@
 - **Minimal Impact**: Changes should only touch what's necessary. Avoid introducing bugs.
 - **Context Awareness**: Read existing code patterns before writing new ones.
 - **Test Everything**: No PR without passing tests. Add tests for new behavior.
+- **Small Commits**: Commit often after each completed step — keeps diffs reviewable and rollback simple.
+
+## Security
+
+- NEVER commit secrets, API keys, tokens, or `.env` files
+- If you see credentials in code, flag it immediately and move them to environment variables
+- Don't put sensitive data in commit messages, PR descriptions, or Linear comments
+- Check `git diff --staged` for accidental secret inclusion before every commit
 
 ## Linear Integration
 
@@ -81,38 +97,7 @@
 - Never force push to main/master
 
 ## Testing Strategy
-
-### Orchestrator Rules
-- The orchestrator NEVER reads raw test output — that eats context
-- Always delegate test runs to the implementer or reviewer subagent
-- Only receive summaries: pass/fail count, failure descriptions, files affected
-
-### Builder-Validator Pattern
-- The **implementer** builds the feature AND runs tests — if tests fail, it fixes them before reporting back
-- The **reviewer** independently verifies — it runs the test suite separately without trusting the implementer's claim that "it works"
-- If both agree it passes, it passes. If the reviewer finds issues, the orchestrator sends the implementer back to fix
-
-### Testing Requirements
-- Unit tests: run on every change, implementer handles this
-- Integration tests: run before any PR, reviewer verifies independently
-- E2E tests: for user-facing features, don't trust unit tests alone — actually verify the feature works end-to-end
-- Bug fixes: write a regression test that FAILS first, then fix the bug, then verify the test passes
-
-### What the Orchestrator Gets Back
-- From implementer: "Changed 3 files, added 2 tests, 47/47 pass"
-- From reviewer: "Verified independently. 47/47 pass. Found 1 issue: missing null check in auth handler line 42"
-- The orchestrator makes decisions based on these summaries, never raw logs
-
-### Never Mark Done Without
-- Implementer confirms tests pass
-- Reviewer independently confirms tests pass
-- For UI changes: visual verification (screenshot or browser check)
-- For API changes: actual request/response verification
-- git diff reviewed for unintended changes
+@import tasks/testing-strategy.md
 
 ## Code Review Standards
-
-- Review your own diff before presenting it
-- Check for: unused imports, debug logs, hardcoded values, missing error handling
-- Ensure backwards compatibility unless explicitly breaking
-- Add inline comments for non-obvious logic
+@import tasks/code-review-standards.md
