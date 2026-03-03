@@ -12,7 +12,7 @@
 - Before compacting or when context is getting long, write current state to `tasks/context-state.md`
 - The state file should capture: current objective, what's been done so far, what's left to do, key decisions made, important file paths and line numbers, and any blockers
 - After compacting, immediately read `tasks/context-state.md` to restore awareness
-- **Hard rule: compact at 50% context usage, don't wait longer**
+- **Hard rule: compact at 65% context usage, don't wait longer**
 - Prefer delegating investigation to subagents over reading files directly in the orchestrator
 - When a subagent returns results, summarize the key findings in 2-3 sentences rather than pasting full output
 
